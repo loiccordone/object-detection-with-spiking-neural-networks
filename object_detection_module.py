@@ -260,6 +260,7 @@ class DetectionLitModule(pl.LightningModule):
         
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
             optimizer, 
-            self.args.epochs
+            self.args.epochs,
+            eta_min=1e-5
         )
         return [optimizer], [scheduler]
