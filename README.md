@@ -11,7 +11,7 @@ Our main contributions are:
 3. We train four different spiking neural networks for classification tasks based on popular neural network architectures (SqueezeNet, VGG, MobileNet, DenseNet) and evaluate them on two automotive event datasets, setting new state-of-the-art results for spiking neural networks. (see the `models` module)
 4. We present spiking neural networks for object detection composed of a spiking backbone and SSD bounding box regression heads that achieve qualitative results on the real-world GEN1 Automotive Detection event dataset. (see `object_detection_module.py`)
  
-Our codes requires [SpikingJelly 0.0.0.0.4](https://github.com/fangwei123456/spikingjelly/tree/0.0.0.0.4), PyTorch 1.11.0, Torchvision 0.11.1, PyTorch Lightning 1.4.4 and Torchmetrics 0.5.0.
+Our codes require [SpikingJelly 0.0.0.0.4](https://github.com/fangwei123456/spikingjelly/tree/0.0.0.0.4), PyTorch 1.11.0, Torchvision 0.11.1, PyTorch Lightning 1.4.4 and Torchmetrics 0.5.0.
 
 # Results
 Since the publication of the paper, results have been improved by correcting errors in the dataset generation and using more epochs for classification tasks (30 epochs instead of 10).
