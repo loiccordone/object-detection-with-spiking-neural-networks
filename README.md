@@ -1,6 +1,6 @@
 # Object Detection with Spiking Neural Networks on Automotive Event Data
 
-*This work is supported by the French technological research agency (ANRT) through a CIFRE thesis in collaboration with Renault.*
+*This work is supported by the French technological research agency (ANRT) through a CIFRE thesis in collaboration between Renault and Université Côte d'Azur.*
 
 This repository contains the codes for the paper [Object Detection with Spiking Neural Networks on Automotive Event Data](https://arxiv.org/abs/2205.04339), accepted to the IJCNN 2022, presenting the first SNNs capable of doing object detection on the complex [Prophesee GEN1 event dataset](https://www.prophesee.ai/2020/01/24/prophesee-gen1-automotive-detection-dataset/).
 
