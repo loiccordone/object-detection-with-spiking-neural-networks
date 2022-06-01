@@ -21,7 +21,6 @@ Since the publication of the paper, results have been improved by correcting err
 | MobileNet-64 + SSD | 24.26M | 4.34G | 0.147 | 29.44% |
 | DenseNet121-24 + SSD | 8.2M | 2.33G | 0.189 | 37.20% |
 
-<br>
 Train a VGG-11 + SSD model on Prophesee GEN1 with 5 timesteps and 2 tbins:
 
     python object_detection.py -path path/to/GEN1_dataset -backbone vgg-11 -T 5 -tbin 2
@@ -51,7 +50,6 @@ Other parameters are available in `object_detection.py`.
 | DenseNet121-32 | 6.95M | 3.98G | 0.898 | 38.32% | 0.966 | 29.46% |
 | DenseNet169-32 | 12.48 | 4.72G | 0.825 | 37.48% | 0.967 | 40.35% |
 
-<br>
 Train a DenseNet121-16 on Prophesee NCARS with 5 timesteps and 2 tbins:
 
     python classification.py -dataset ncars -path path/to/NCARS_dataset -model densenet121-16 -T 5 -tbin 2
@@ -73,7 +71,7 @@ If you find this work useful feel free to cite our IJCNN paper:
     @InProceedings{Cordone_2022_IJCNN,
         author    = {Cordone, Loic and Miramond, Benoît and Thierion, Phillipe},
         title     = {Object Detection with Spiking Neural Networks on Automotive Event Data},
-        booktitle = {Proceedings of the IEEE International Joint Conference on Neural Networks (IJCNN) 2022.},
+        booktitle = {Proceedings of the IEEE International Joint Conference on Neural Networks (IJCNN)},
         month     = {July},
         year      = {2022},
         pages     = {}
