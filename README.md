@@ -1,6 +1,9 @@
 # Object Detection with Spiking Neural Networks on Automotive Event Data
 
+*This work is supported by the French technological research agency (ANRT) through a CIFRE thesis in collaboration between Renault and Université Côte d'Azur.*
+
 This repository contains the codes for the paper [Object Detection with Spiking Neural Networks on Automotive Event Data](https://arxiv.org/abs/2205.04339), accepted to the IJCNN 2022, presenting the first SNNs capable of doing object detection on the complex [Prophesee GEN1 event dataset](https://www.prophesee.ai/2020/01/24/prophesee-gen1-automotive-detection-dataset/).
+
 
 Our main contributions are:
 1. We present a novel approach to encode event data called *voxel cube* that preserves their binarity and temporal information while keeping a low number of timesteps. (see the `datasets` module)
@@ -8,7 +11,7 @@ Our main contributions are:
 3. We train four different spiking neural networks for classification tasks based on popular neural network architectures (SqueezeNet, VGG, MobileNet, DenseNet) and evaluate them on two automotive event datasets, setting new state-of-the-art results for spiking neural networks. (see the `models` module)
 4. We present spiking neural networks for object detection composed of a spiking backbone and SSD bounding box regression heads that achieve qualitative results on the real-world GEN1 Automotive Detection event dataset. (see `object_detection_module.py`)
  
-Our codes requires [SpikingJelly 0.0.0.0.4](https://github.com/fangwei123456/spikingjelly/tree/0.0.0.0.4), PyTorch 1.11.0, Torchvision 0.11.1, PyTorch Lightning 1.4.4 and Torchmetrics 0.5.0.
+Our codes require [SpikingJelly 0.0.0.0.4](https://github.com/fangwei123456/spikingjelly/tree/0.0.0.0.4), PyTorch 1.11.0, Torchvision 0.11.1, PyTorch Lightning 1.4.4 and Torchmetrics 0.5.0.
 
 # Results
 Since the publication of the paper, results have been improved by correcting errors in the dataset generation and using more epochs for classification tasks (30 epochs instead of 10).
