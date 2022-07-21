@@ -62,13 +62,20 @@ def get_model(args):
             num_classes=2, backend="cupy"
         )
     elif family == "vgg":
-        vggs = {
-            "11": multi_step_spiking_vgg11,
-            "13": multi_step_spiking_vgg13,
-            "16": multi_step_spiking_vgg16,
-        }
-        return vggs[version](
-            2*args.tbin, norm_layer=norm_layer,
-            multi_step_neuron=ms_neuron,
-            num_classes=2, backend="cupy"
-        )
+        if version == "custom":
+                return multi_step_spiking_vgg_custom(
+                    2*args.tbin, cfg=args.cfg,
+                    norm_layer=norm_layer, multi_step_neuron=ms_neuron,
+                    num_classes=2, backend="cupy"
+                )
+        else:
+            vggs = {
+                "11": multi_step_spiking_vgg11,
+                "13": multi_step_spiking_vgg13,
+                "16": multi_step_spiking_vgg16,
+            }
+            return vggs[version](
+                2*args.tbin, norm_layer=norm_layer,
+                multi_step_neuron=ms_neuron,
+                num_classes=2, backend="cupy"
+            )

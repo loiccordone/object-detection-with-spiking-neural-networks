@@ -10,6 +10,7 @@ __all__ = [
     'multi_step_spiking_vgg13','spiking_vgg13',
     'multi_step_spiking_vgg16','spiking_vgg16',
     'multi_step_spiking_vgg19','spiking_vgg19',
+    'multi_step_spiking_vgg_custom','spiking_vgg_custom',
 ]
 
 # modified from https://github.com/pytorch/vision/blob/main/torchvision/models/vgg.py
@@ -157,11 +158,51 @@ cfgs = {
 
 
 def _spiking_vgg(arch, cfg, num_init_channels, norm_layer: callable = None, single_step_neuron: callable = None, **kwargs):
-    return SpikingVGG(num_init_channels, cfg=cfgs[cfg], norm_layer=norm_layer, single_step_neuron=single_step_neuron, **kwargs)
+    return SpikingVGG(num_init_channels, cfg=cfg, norm_layer=norm_layer, single_step_neuron=single_step_neuron, **kwargs)
 
 def _multi_step_spiking_vgg(arch, cfg, num_init_channels, norm_layer: callable = None, T: int = None, multi_step_neuron: callable = None, **kwargs):
-    return MultiStepSpikingVGG(num_init_channels, cfg=cfgs[cfg], norm_layer=norm_layer, T=T, multi_step_neuron=multi_step_neuron, **kwargs)
+    return MultiStepSpikingVGG(num_init_channels, cfg=cfg, norm_layer=norm_layer, T=T, multi_step_neuron=multi_step_neuron, **kwargs)
 
+def spiking_vgg_custom(num_init_channels: int, cfg, norm_layer: callable = None, single_step_neuron: callable = None, **kwargs):
+    """
+    :param num_init_channels: number of channels of the input data
+    :type num_init_channels: int
+    :param cfg: configuration of the VGG layers (num channels, pooling)
+    :type cfg: list
+    :param norm_layer: a batch norm layer
+    :type norm_layer: callable
+    :param single_step_neuron: a single-step neuron
+    :type single_step_neuron: callable
+    :param kwargs: kwargs for `single_step_neuron`
+    :type kwargs: dict
+    :return: Spiking VGG-11 with norm layer
+    :rtype: torch.nn.Module
+    A spiking version of VGG-11-BN model from `"Very Deep Convolutional Networks for Large-Scale Image Recognition" <https://arxiv.org/pdf/1409.1556.pdf>`_
+    """
+
+    return _spiking_vgg('vgg_custom', cfg, num_init_channels, norm_layer, single_step_neuron, **kwargs)
+
+
+def multi_step_spiking_vgg_custom(num_init_channels, cfg, norm_layer: callable = None, T: int = None, multi_step_neuron: callable = None, **kwargs):
+    """
+    :param num_init_channels: number of channels of the input data
+    :type num_init_channels: int
+    :param cfg: configuration of the VGG layers (num channels, pooling)
+    :type cfg: list
+    :param norm_layer: a batch norm layer
+    :type norm_layer: callable
+    :param T: total time-steps
+    :type T: int
+    :param multi_step_neuron: a multi_step neuron
+    :type multi_step_neuron: callable
+    :param kwargs: kwargs for `single_step_neuron`
+    :type kwargs: dict
+    :return: Spiking VGG-11 with norm layer
+    :rtype: torch.nn.Module
+    A multi-step spiking version of VGG-11-BN model from `"Very Deep Convolutional Networks for Large-Scale Image Recognition" <https://arxiv.org/pdf/1409.1556.pdf>`_
+    """
+
+    return _multi_step_spiking_vgg('vgg_custom', cfg, num_init_channels, norm_layer, T, multi_step_neuron, **kwargs)
 
 def spiking_vgg11(num_init_channels: int, norm_layer: callable = None, single_step_neuron: callable = None, **kwargs):
     """
@@ -178,7 +219,7 @@ def spiking_vgg11(num_init_channels: int, norm_layer: callable = None, single_st
     A spiking version of VGG-11-BN model from `"Very Deep Convolutional Networks for Large-Scale Image Recognition" <https://arxiv.org/pdf/1409.1556.pdf>`_
     """
 
-    return _spiking_vgg('vgg11', 'A', num_init_channels, norm_layer, single_step_neuron, **kwargs)
+    return _spiking_vgg('vgg11', cfgs['A'], num_init_channels, norm_layer, single_step_neuron, **kwargs)
 
 
 def multi_step_spiking_vgg11(num_init_channels, norm_layer: callable = None, T: int = None, multi_step_neuron: callable = None, **kwargs):
@@ -198,7 +239,7 @@ def multi_step_spiking_vgg11(num_init_channels, norm_layer: callable = None, T: 
     A multi-step spiking version of VGG-11-BN model from `"Very Deep Convolutional Networks for Large-Scale Image Recognition" <https://arxiv.org/pdf/1409.1556.pdf>`_
     """
 
-    return _multi_step_spiking_vgg('vgg11', 'A', num_init_channels, norm_layer, T, multi_step_neuron, **kwargs)
+    return _multi_step_spiking_vgg('vgg11', cfgs['A'], num_init_channels, norm_layer, T, multi_step_neuron, **kwargs)
 
 
 def spiking_vgg13(num_init_channels: int, norm_layer: callable = None, single_step_neuron: callable = None, **kwargs):
@@ -216,7 +257,7 @@ def spiking_vgg13(num_init_channels: int, norm_layer: callable = None, single_st
     A spiking version of VGG-13-BN model from `"Very Deep Convolutional Networks for Large-Scale Image Recognition" <https://arxiv.org/pdf/1409.1556.pdf>`_
     """
 
-    return _spiking_vgg('vgg13', 'B', num_init_channels, norm_layer, single_step_neuron, **kwargs)
+    return _spiking_vgg('vgg13', cfgs['B'], num_init_channels, norm_layer, single_step_neuron, **kwargs)
 
 
 def multi_step_spiking_vgg13(num_init_channels: int, norm_layer: callable = None, T: int = None, multi_step_neuron: callable = None, **kwargs):
@@ -236,7 +277,7 @@ def multi_step_spiking_vgg13(num_init_channels: int, norm_layer: callable = None
     A multi-step spiking version of VGG-13-BN model from `"Very Deep Convolutional Networks for Large-Scale Image Recognition" <https://arxiv.org/pdf/1409.1556.pdf>`_
     """
 
-    return _multi_step_spiking_vgg('vgg13', 'B', num_init_channels, norm_layer, T, multi_step_neuron, **kwargs)
+    return _multi_step_spiking_vgg('vgg13', cfgs['B'], num_init_channels, norm_layer, T, multi_step_neuron, **kwargs)
 
 
 def spiking_vgg16(num_init_channels: int, norm_layer: callable = None, single_step_neuron: callable = None, **kwargs):
@@ -254,7 +295,7 @@ def spiking_vgg16(num_init_channels: int, norm_layer: callable = None, single_st
     A spiking version of VGG-16-BN model from `"Very Deep Convolutional Networks for Large-Scale Image Recognition" <https://arxiv.org/pdf/1409.1556.pdf>`_
     """
 
-    return _spiking_vgg('vgg16', 'D', num_init_channels, norm_layer, single_step_neuron, **kwargs)
+    return _spiking_vgg('vgg16', cfgs['D'], num_init_channels, norm_layer, single_step_neuron, **kwargs)
 
 
 def multi_step_spiking_vgg16(num_init_channels: int, norm_layer: callable = None, T: int = None, multi_step_neuron: callable = None, **kwargs):
@@ -274,7 +315,7 @@ def multi_step_spiking_vgg16(num_init_channels: int, norm_layer: callable = None
     A multi-step spiking version of VGG-16-BN model from `"Very Deep Convolutional Networks for Large-Scale Image Recognition" <https://arxiv.org/pdf/1409.1556.pdf>`_
     """
 
-    return _multi_step_spiking_vgg('vgg16', 'D', num_init_channels, norm_layer, T, multi_step_neuron, **kwargs)
+    return _multi_step_spiking_vgg('vgg16', cfgs['D'], num_init_channels, norm_layer, T, multi_step_neuron, **kwargs)
 
 
 def spiking_vgg19(num_init_channels: int, norm_layer: callable = None, single_step_neuron: callable = None, **kwargs):
@@ -292,7 +333,7 @@ def spiking_vgg19(num_init_channels: int, norm_layer: callable = None, single_st
     A spiking version of VGG-19-BN model from `"Very Deep Convolutional Networks for Large-Scale Image Recognition" <https://arxiv.org/pdf/1409.1556.pdf>`_
     """
 
-    return _spiking_vgg('vgg19', 'E', num_init_channels, norm_layer, single_step_neuron, **kwargs)
+    return _spiking_vgg('vgg19', cfgs['E'], num_init_channels, norm_layer, single_step_neuron, **kwargs)
 
 
 def multi_step_spiking_vgg19(num_init_channels: int, norm_layer: callable = None, T: int = None, multi_step_neuron: callable = None, **kwargs):
@@ -312,4 +353,4 @@ def multi_step_spiking_vgg19(num_init_channels: int, norm_layer: callable = None
     A multi-step spiking version of VGG-19-BN model from `"Very Deep Convolutional Networks for Large-Scale Image Recognition" <https://arxiv.org/pdf/1409.1556.pdf>`_
     """
 
-    return _multi_step_spiking_vgg('vgg19', 'E', num_init_channels, norm_layer, T, multi_step_neuron, **kwargs)
+    return _multi_step_spiking_vgg('vgg19', cfgs['E'], num_init_channels, norm_layer, T, multi_step_neuron, **kwargs)
