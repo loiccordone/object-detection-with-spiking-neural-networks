@@ -26,7 +26,7 @@ Since the publication of the paper, results have been improved by correcting err
 
 Train a VGG-11 + SSD model on Prophesee GEN1 with 5 timesteps and 2 tbins:
 
-    python object_detection.py -path path/to/GEN1_dataset -backbone vgg-11 -T 5 -tbin 2
+    python object_detection.py -path path/to/GEN1_dataset -backbone vgg-11 -T 5 -tbin 2 -save_ckpt
 
 To measure test mAP and sparsity on a pretrained model:
 
