@@ -2,10 +2,10 @@ from os.path import join
 import sys
 import argparse
 
-comet_available = False
+# comet_available = False
 try:
     import comet_ml
-    comet_available = True
+    # comet_available = True
 except ImportError:
     print("Comet is not installed, Comet logger will not be available.")
 
@@ -53,6 +53,7 @@ def main():
 
     # Backbone
     parser.add_argument('-backbone', default='vgg-11', type=str, help='model used {squeezenet-v, vgg-v, mobilenet-v, densenet-v}', dest='model')
+    parser.add_argument('-cfg', type=str, help='configuration of the layers of a custom VGG')
     parser.add_argument('-no_bn', action='store_false', help='don\'t use BatchNorm2d', dest='bn')
     parser.add_argument('-pretrained_backbone', default=None, type=str, help='path to pretrained backbone model')
     parser.add_argument('-pretrained', default=None, type=str, help='path to pretrained model')
@@ -73,6 +74,7 @@ def main():
     parser.add_argument('-detections_per_img', default=100, type=int, help='number of best detections to keep after NMS')
 
     args = parser.parse_args()
+    args.cfg = [int(el) if el.isdigit() else el for el in args.cfg.split(",")]
     print(args)
 
     if args.dataset == "gen1":
@@ -99,14 +101,18 @@ def main():
         callbacks.append(ckpt_callback)
 
     logger = None
-    if comet_available and args.comet_api:
-        comet_logger = CometLogger(
-            api_key=args.comet_api,
-            project_name=f"od-{args.dataset}-{args.model}/",
-            save_dir="comet_logs",
-            log_code=True,
-        )
-        logger = comet_logger
+    if args.comet_api:
+        try:
+            comet_logger = CometLogger(
+                api_key=args.comet_api,
+                project_name=f"od-{args.dataset}-{args.model}/",
+                save_dir="comet_logs",
+                log_code=True,
+            )
+            logger = comet_logger
+        except ImportError:
+            print("Comet is not installed, Comet logger will not be available.")
+            
 
     trainer = pl.Trainer(
         gpus=[args.device], gradient_clip_val=1., max_epochs=args.epochs,

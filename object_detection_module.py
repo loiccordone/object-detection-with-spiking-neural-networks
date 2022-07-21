@@ -70,6 +70,7 @@ class DetectionLitModule(pl.LightningModule):
             matched_idxs.append(self.proposal_matcher(match_quality_matrix))
 
         # Loss computation
+        loss = None
         if mode != "test":
             losses = self.compute_loss(targets, head_outputs, anchors, matched_idxs)
 
