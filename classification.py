@@ -2,6 +2,11 @@ from os.path import join
 import sys
 import argparse
 
+try:
+    import comet_ml
+except ImportError:
+    print("Comet is not installed, Comet logger will not be available.")
+
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
@@ -9,6 +14,8 @@ from pytorch_lightning.callbacks import ModelCheckpoint
 from datasets.classification_datasets import NCARSClassificationDataset, GEN1ClassificationDataset
 from models.utils import get_model
 from classification_module import ClassificationLitModule
+
+
 
 def main():
     parser = argparse.ArgumentParser(description='Classify event dataset')
@@ -35,6 +42,7 @@ def main():
     parser.add_argument('-test', action='store_true', help='whether to test the model')
 
     parser.add_argument('-save_ckpt', action='store_true', help='saves checkpoints')
+    parser.add_argument('-comet_api', default=None, type=str, help='api key for Comet Logger')
 
     args = parser.parse_args()
     print(args)
@@ -71,6 +79,19 @@ def main():
         )
         callbacks.append(ckpt_callback)
 
+    logger = None
+    if args.comet_api:
+        try:
+            comet_logger = CometLogger(
+                api_key=args.comet_api,
+                project_name=f"od-{args.dataset}-{args.model}/",
+                save_dir="comet_logs",
+                log_code=True,
+            )
+            logger = comet_logger
+        except ImportError:
+            print("Comet is not installed, Comet logger will not be available.")
+
     trainer = pl.Trainer(
         gpus=[args.device], gradient_clip_val=1., max_epochs=args.epochs,
         limit_train_batches=1., limit_val_batches=1.,
@@ -78,6 +99,7 @@ def main():
         deterministic=False,
         precision=args.precision,
         callbacks=callbacks,
+        logger=logger,
     )
 
     if args.train:
