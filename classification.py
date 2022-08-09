@@ -10,6 +10,7 @@ except ImportError:
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.loggers import CometLogger
 
 from datasets.classification_datasets import NCARSClassificationDataset, GEN1ClassificationDataset
 from models.utils import get_model
@@ -84,7 +85,7 @@ def main():
         try:
             comet_logger = CometLogger(
                 api_key=args.comet_api,
-                project_name=f"od-{args.dataset}-{args.model}/",
+                project_name=f"classif-{args.dataset}-{args.model}/",
                 save_dir="comet_logs",
                 log_code=True,
             )
