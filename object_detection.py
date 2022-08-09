@@ -53,7 +53,6 @@ def main():
 
     # Backbone
     parser.add_argument('-backbone', default='vgg-11', type=str, help='model used {squeezenet-v, vgg-v, mobilenet-v, densenet-v}', dest='model')
-    parser.add_argument('-cfg', type=str, help='configuration of the layers of a custom VGG')
     parser.add_argument('-no_bn', action='store_false', help='don\'t use BatchNorm2d', dest='bn')
     parser.add_argument('-pretrained_backbone', default=None, type=str, help='path to pretrained backbone model')
     parser.add_argument('-pretrained', default=None, type=str, help='path to pretrained model')
@@ -74,7 +73,6 @@ def main():
     parser.add_argument('-detections_per_img', default=100, type=int, help='number of best detections to keep after NMS')
 
     args = parser.parse_args()
-    args.cfg = [int(el) if el.isdigit() else el for el in args.cfg.split(",")]
     print(args)
 
     if args.dataset == "gen1":
