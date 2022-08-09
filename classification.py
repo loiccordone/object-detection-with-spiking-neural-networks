@@ -23,6 +23,8 @@ def main():
 
     parser.add_argument('-dataset', default='ncars', type=str, help='dataset used {NCARS, GEN1}')
     parser.add_argument('-path', default='PropheseeNCARS', type=str, help='dataset used. {NCARS, GEN1}')
+    parser.add_argument('-undersample_cars_percent', default='0.24', type=float, help=
+                        'Undersample cars in Prophesse GEN1 Classification by using only x percent of cars.')
 
     parser.add_argument('-model', default='vgg-11', type=str, help='model used {squeezenet-v, vgg-v, mobilenet-v, densenet-v}')
     parser.add_argument('-no_bn', action='store_false', help='don\'t use BatchNorm2d', dest='bn')
