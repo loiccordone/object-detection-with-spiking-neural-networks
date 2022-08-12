@@ -97,7 +97,7 @@ class SpikingMobileNet(nn.Module):
             DepthSepConv(in_channels*16, in_channels*16, norm_layer, bias, stride=1, neuron=neuron, dw=dw, **kwargs)
         )
 
-        self.out_channels = [in_channels*4, in_channels*8, in_channels*16]
+        self.out_channels = [in_channels*2, in_channels*8, in_channels*16]
     
         self.classifier = nn.Sequential(
             OrderedDict(
@@ -185,8 +185,8 @@ class MultiStepSpikingMobileNet(SpikingMobileNet):
             x_seq = x_seq.flatten(start_dim=-2).sum(dim=-1)
             return x_seq
         else:
-            fm_1 = sequential_forward(self.features[1:4], x_seq)
-            fm_2 = sequential_forward(self.features[4:6], fm_1)
+            fm_1 = sequential_forward(self.features[1:2], x_seq)
+            fm_2 = sequential_forward(self.features[2:6], fm_1)
             x_seq = sequential_forward(self.features[6:], fm_2)
             return fm_1, fm_2, x_seq
 

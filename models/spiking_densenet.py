@@ -133,6 +133,11 @@ class SpikingDenseNet(nn.Module):
             )
             self.features.add_module(f"denseblock{i + 1}", block)
             num_features = num_features + num_layers * growth_rate
+            
+            # register feature maps size after trans1, trans2, dense4 (not after trans3) for OD
+            if i != len(block_config) - 2:
+                self.out_channels.append(num_features)
+                
             if i != len(block_config) - 1:
                 trans = _Transition(
                     num_input_features=num_features, 
@@ -145,9 +150,6 @@ class SpikingDenseNet(nn.Module):
                 self.features.add_module(f"transition{i + 1}", trans)
                 num_features = num_features // 2
                 
-            # register feature maps size after trans1, trans2, dense4 (not after trans3) for OD
-            if i != len(block_config) - 2:
-                self.out_channels.append(num_features)
         
         self.classifier = nn.Sequential(
             OrderedDict(
