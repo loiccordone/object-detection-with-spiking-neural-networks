@@ -4,6 +4,7 @@
 
 This repository contains the codes for the paper [Object Detection with Spiking Neural Networks on Automotive Event Data](https://arxiv.org/abs/2205.04339), accepted to the IJCNN 2022, presenting the first SNNs capable of doing object detection on the complex [Prophesee GEN1 event dataset](https://www.prophesee.ai/2020/01/24/prophesee-gen1-automotive-detection-dataset/).
 
+[![Video demo](video_urban.png)](https://www.youtube.com/watch?v=1Wcqem6u91Y "Video demo")
 
 Our main contributions are:
 1. We present a novel approach to encode event data called *voxel cube* that preserves their binarity and temporal information while keeping a low number of timesteps. (see the `datasets` module)
