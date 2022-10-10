@@ -94,7 +94,7 @@ def main():
             dirpath=f"ckpt-od-{args.dataset}-{args.model}/",
             filename=f"{args.dataset}" + "-{epoch:02d}-{train_loss:.4f}",
             save_top_k=3,
-            mode='max',
+            mode='min',
         )
         callbacks.append(ckpt_callback)
 
