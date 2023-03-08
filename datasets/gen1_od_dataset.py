@@ -32,16 +32,8 @@ class GEN1DetectionDataset(Dataset):
             print(f"Done! File saved as {save_file}")
             
     def __getitem__(self, index):
-        (coords, feats), target = self.samples[index]
-        
-        sample = torch.sparse_coo_tensor(
-            coords.t(), 
-            feats.to(torch.float32),
-            size=(self.T, self.quantized_h, self.quantized_w, self.C)
-            )
-        sample = sample.coalesce().to_dense().permute(0,3,1,2)
-        
-        return sample, target
+        sparse_tensor, target = self.samples[index]
+        return sparse_tensor.to_dense().permute(0,3,1,2), target
     
     def __len__(self):
         return len(self.samples)
@@ -134,4 +126,12 @@ class GEN1DetectionDataset(Dataset):
 
         feats = torch.nn.functional.one_hot(torch.from_numpy(tbin_feats).to(torch.long), 2*self.tbin).to(bool)
 
-        return coords.to(torch.int16), feats.to(bool)
+        sparse_tensor = torch.sparse_coo_tensor(
+            coords.t().to(torch.int32), 
+            feats,
+            (self.T, self.quantized_h, self.quantized_w, self.C),
+        )
+
+        sparse_tensor = sparse_tensor.coalesce().to(torch.bool)
+            
+        return sparse_tensor
