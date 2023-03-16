@@ -36,15 +36,12 @@ class ClassificationDataset(Dataset):
             print(f"Done! File saved as {save_file}.")
             
     def __getitem__(self, index):
-        coords, feats, target = self.samples[index]
-        
-        sample = torch.sparse_coo_tensor(coords.t(), feats.to(torch.float32)).coalesce()
+        sparse_tensor, target = self.samples[index]
         sample = sample.sparse_resize_(
             (self.T, sample.size(1), sample.size(2), self.C), 3, 1
         ).to_dense().permute(0,3,1,2)
-        
         sample = T.Resize((64,64), T.InterpolationMode.NEAREST)(sample)
-        
+
         return sample, target
 
     def __len__(self):
@@ -93,9 +90,17 @@ class NCARSClassificationDataset(ClassificationDataset):
                 # tbin_index * polarity produces the real tbin index according to polarity (range 0-(tbin*2))
                 tbin_feats = ((events['p']+1) * (tbin_coords+1)) - 1
 
-                feats = torch.nn.functional.one_hot(torch.from_numpy(tbin_feats).to(torch.long), 2*self.tbin).to(bool)
+                feats = torch.nn.functional.one_hot(torch.from_numpy(tbin_feats).to(torch.long), 2*self.tbin)
 
-                samples.append([coords.to(torch.int16), feats.to(bool), target])
+                sparse_tensor = torch.sparse_coo_tensor(
+                    coords.t().to(torch.int32), 
+                    feats,
+                    (self.T, self.quantized_h, self.quantized_w, self.C),
+                )
+
+                sparse_tensor = sparse_tensor.coalesce().to(torch.bool)
+
+                samples.append((sparse_tensor, target))
                 pbar.update(1)
                 
             pbar.close()
@@ -169,12 +174,28 @@ class GEN1ClassificationDataset(ClassificationDataset):
 
                 feats = torch.nn.functional.one_hot(torch.from_numpy(tbin_feats).to(torch.long), 2*self.tbin)
 
-                samples.append([coords.to(torch.int16), feats.to(bool), target])
+                sparse_tensor = torch.sparse_coo_tensor(
+                    coords.t().to(torch.int32), 
+                    feats,
+                    (self.T, self.quantized_h, self.quantized_w, self.C),
+                )
+
+                sparse_tensor = sparse_tensor.coalesce().to(torch.bool)
+
+                samples.append((sparse_tensor, target))
 
                 # Oversample pedestrians with an horizontal mirror
                 if self.mode == "train" and target == 1:
                     coords[:,1] = self.w-coords[:,1]-1
-                    samples.append([coords.to(torch.int16), feats.to(bool), target])
+                        sparse_tensor = torch.sparse_coo_tensor(
+                        coords.t().to(torch.int32), 
+                        feats,
+                        (self.T, self.quantized_h, self.quantized_w, self.C),
+                    )
+
+                    sparse_tensor = sparse_tensor.coalesce().to(torch.bool)
+
+                    samples.append((sparse_tensor, target))
                         
             pbar.update(1)
         pbar.close()

@@ -124,7 +124,7 @@ class GEN1DetectionDataset(Dataset):
         # tbin_index * polarity produces the real tbin index according to polarity (range 0-(tbin*2))
         tbin_feats = ((events['p']+1) * (tbin_coords+1)) - 1
 
-        feats = torch.nn.functional.one_hot(torch.from_numpy(tbin_feats).to(torch.long), 2*self.tbin).to(bool)
+        feats = torch.nn.functional.one_hot(torch.from_numpy(tbin_feats).to(torch.long), 2*self.tbin)
 
         sparse_tensor = torch.sparse_coo_tensor(
             coords.t().to(torch.int32), 
